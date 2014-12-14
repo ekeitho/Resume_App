@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.support.v4.widget.DrawerLayout;
+import android.webkit.WebView;
 
 import com.ekeitho.resume.github.GithubFragment;
 
@@ -50,7 +51,6 @@ public class Resume extends ActionBarActivity
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
 
-        Log.v("selected", "position selected is " + position);
         if( position == 1) {
             fragmentManager.beginTransaction()
                     .replace(R.id.container, new GithubFragment())
@@ -63,7 +63,6 @@ public class Resume extends ActionBarActivity
     }
 
     public void onSectionAttached(int number) {
-        Log.v("number", "number is " + number);
         switch (number) {
             case 1:
                 mTitle = getString(R.string.title_section1);
@@ -142,6 +141,10 @@ public class Resume extends ActionBarActivity
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main_activity2, container, false);
+            WebView webView = (WebView) rootView.findViewById(R.id.ekeithoWebView);
+            webView.getSettings().setJavaScriptEnabled(true);
+            webView.getSettings().setUserAgentString("Android");
+            webView.loadUrl("https://ekeitho.com");
             return rootView;
         }
 
