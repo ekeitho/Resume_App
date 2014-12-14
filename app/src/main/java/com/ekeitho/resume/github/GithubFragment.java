@@ -2,7 +2,7 @@ package com.ekeitho.resume.github;
 
 
 import android.app.Activity;
-import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -51,6 +51,15 @@ public class GithubFragment extends Fragment {
         mainActivity = activity;
     }
 
+    /**
+     *
+     * This method should only set up and create instances of our views.
+     *
+     * @param inflater
+     * @param container
+     * @param savedInstanceState
+     * @return
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -59,10 +68,16 @@ public class GithubFragment extends Fragment {
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.gitSwipeRefreshLayout);
         mListView = (ListView) rootView.findViewById(R.id.github_repos);
 
-
         return rootView;
     }
 
+    /**
+     *
+     * Supporting method after onCreateView, which set's up the meat of our logic.
+     *
+     * @param view
+     * @param savedInstanceState
+     */
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -72,10 +87,7 @@ public class GithubFragment extends Fragment {
         // set the views adapter to our created one
         mListView.setAdapter(mGithubAdapter);
 
-        mSwipeRefreshLayout.setColorSchemeColors(R.color.material_blue_grey_800,
-                R.color.material_blue_grey_900,
-                R.color.material_blue_grey_800,
-                R.color.material_blue_grey_800);
+        mSwipeRefreshLayout.setColorSchemeColors(Color.MAGENTA, Color.DKGRAY);
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -90,7 +102,6 @@ public class GithubFragment extends Fragment {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
         }
 
         @Override
