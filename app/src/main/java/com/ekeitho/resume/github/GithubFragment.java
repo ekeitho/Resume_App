@@ -8,12 +8,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
 import com.ekeitho.resume.R;
+import com.ekeitho.resume.Resume;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -48,6 +50,7 @@ public class GithubFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        ((Resume)activity).onSectionAttached(2);
         mainActivity = activity;
     }
 
@@ -63,7 +66,7 @@ public class GithubFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        View rootView = inflater.inflate(R.layout.github_fragment_repo, container, false);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.gitSwipeRefreshLayout);
         mListView = (ListView) rootView.findViewById(R.id.github_repos);
@@ -87,7 +90,7 @@ public class GithubFragment extends Fragment {
         // set the views adapter to our created one
         mListView.setAdapter(mGithubAdapter);
 
-        mSwipeRefreshLayout.setColorSchemeColors(Color.MAGENTA, Color.DKGRAY);
+        mSwipeRefreshLayout.setColorSchemeColors(Color.parseColor("#4A148C"));
 
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -95,6 +98,12 @@ public class GithubFragment extends Fragment {
                 new AsyncListViewLoader().execute("https://api.github.com/users/ekeitho/repos?sort=pushed");
             }
         });
+    }
+
+    @Override
+    public void onPause() {
+        Log.v("onPause", "git repo frag onpause");
+        super.onPause();
     }
 
     public class AsyncListViewLoader extends AsyncTask<String, Void, List<Repo>> {
@@ -168,7 +177,5 @@ public class GithubFragment extends Fragment {
 
             return new Repo(name);
         }
-
-
     }
 }
