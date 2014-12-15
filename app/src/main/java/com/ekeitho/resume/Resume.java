@@ -45,6 +45,8 @@ public class Resume extends ActionBarActivity
         mNavigationDrawerFragment.setUp(
                 R.id.navigation_drawer,
                 (DrawerLayout) findViewById(R.id.drawer_layout));
+
+        Log.v("DualPane", "Dual pane is: " + getResources().getBoolean(R.bool.dual_pane));
     }
 
     @Override

@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,6 +54,7 @@ public class GithubFragment extends Fragment {
         // these tells the main activity that this is the most recent fragment
         ((Resume)activity).onSectionAttached(2);
         mainActivity = activity;
+
     }
 
     /**
@@ -155,7 +155,7 @@ public class GithubFragment extends Fragment {
                 JSONArray arr = new JSONArray(builder.toString());
 
                 for(int i = 0; i < arr.length(); i++) {
-                    result.add(convertContact(arr.getJSONObject(i)));
+                    result.add(convertRepo(arr.getJSONObject(i)));
                 }
 
             } catch (JSONException e) {
@@ -178,7 +178,7 @@ public class GithubFragment extends Fragment {
 
 
         // self made
-        private Repo convertContact(JSONObject obj) throws JSONException {
+        private Repo convertRepo(JSONObject obj) throws JSONException {
             String name = obj.getString("name");
             return new Repo(name);
         }

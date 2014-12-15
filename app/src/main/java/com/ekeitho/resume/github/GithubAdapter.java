@@ -38,27 +38,28 @@ public class GithubAdapter extends RecyclerView.Adapter<GithubAdapter.ViewHolder
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(final ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.git_cards, parent, false);
         // set the view's size, margins, paddings and layout parameters
         v.setPadding(10,10,10,10);
 
         ViewHolder vh = new ViewHolder(v);
+        vh.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if ( parent.getContext().getResources().getBoolean(R.bool.dual_pane)) {
+
+                }
+            }
+        });
+
         return vh;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, final int i) {
         viewHolder.mTextView.setText(itemList.get(i).getRepoName());
-        viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-
-                v.getContext().startActivity(intent);
-            }
-        });
     }
 
     @Override
