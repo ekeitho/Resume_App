@@ -1,75 +1,61 @@
 package com.ekeitho.resume.github;
 
-import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
-
 import com.ekeitho.resume.R;
+
 import java.util.List;
 
 /**
- * An adapter that deals with information for my Github Repositories.
+ * Created by Keithmaynn on 12/14/14.
  */
-public class GithubAdapter extends ArrayAdapter<Repo> {
+public class GithubAdapter extends RecyclerView.Adapter<GithubAdapter.ViewHolder> {
 
     private List<Repo> itemList;
-    private Context context;
 
-    public GithubAdapter(List<Repo> itemList, Context ctx) {
-        super(ctx, android.R.layout.simple_list_item_1, itemList);
+    public static class ViewHolder extends RecyclerView.ViewHolder {
+        // each data item is just a string in this case
+        public View mView;
+        public TextView mTextView;
+
+        public ViewHolder(View v) {
+            super(v);
+            mView = v;
+            mTextView = (TextView) mView.findViewById(R.id.git_card_text_view);
+        }
+    }
+
+    public GithubAdapter(List<Repo> itemList) {
         this.itemList = itemList;
-        this.context = ctx;
-    }
-
-    public int getCount() {
-        if (itemList != null)
-            return itemList.size();
-        return 0;
-    }
-
-    public Repo getItem(int position) {
-        if (itemList != null)
-            return itemList.get(position);
-        return null;
-    }
-
-    public long getItemId(int position) {
-        if (itemList != null)
-            return itemList.get(position).hashCode();
-        return 0;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.git_cards, parent, false);
+        // set the view's size, margins, paddings and layout parameters
 
-        View v = convertView;
-        if (v == null) {
-            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(R.layout.list_item, null);
-        }
-
-        Repo c = itemList.get(position);
-        TextView text = (TextView) v.findViewById(R.id.tvGitRepoName);
-        text.setText(c.getRepoName());
-
-
-        return v;
-
+        ViewHolder vh = new ViewHolder(v);
+        return vh;
     }
 
-    public List<Repo> getItemList() {
-        return itemList;
+    @Override
+    public void onBindViewHolder(ViewHolder viewHolder, int i) {
+        viewHolder.mTextView.setText(itemList.get(i).getRepoName());
+    }
+
+    @Override
+    public int getItemCount() {
+        return itemList.size();
     }
 
     public void setItemList(List<Repo> itemList) {
         this.itemList = itemList;
     }
 
-
-
-
 }
+

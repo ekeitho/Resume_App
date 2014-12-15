@@ -8,11 +8,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.ekeitho.resume.R;
 import com.ekeitho.resume.Resume;
@@ -41,8 +42,9 @@ import java.util.List;
 public class GithubFragment extends Fragment {
 
     private GithubAdapter mGithubAdapter;
-    private ListView mListView;
+    private RecyclerView mRecyclerView;
     private SwipeRefreshLayout mSwipeRefreshLayout;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     private List<Repo> list = new ArrayList<Repo>();
     private Activity mainActivity;
@@ -69,7 +71,7 @@ public class GithubFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.github_fragment_repo, container, false);
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) rootView.findViewById(R.id.gitSwipeRefreshLayout);
-        mListView = (ListView) rootView.findViewById(R.id.github_repos);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.github_repos);
 
         return rootView;
     }
@@ -86,12 +88,22 @@ public class GithubFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // first set the adapter as empty
-        mGithubAdapter = new GithubAdapter(list, mainActivity.getApplicationContext());
+        mGithubAdapter = new GithubAdapter(list);
+
         // set the views adapter to our created one
-        mListView.setAdapter(mGithubAdapter);
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
 
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(mainActivity);
+
+        // set recycler views manager and the adapter
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mGithubAdapter);
+
+        // the fancy refresh down swipe :)
         mSwipeRefreshLayout.setColorSchemeColors(Color.parseColor("#4A148C"));
-
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
