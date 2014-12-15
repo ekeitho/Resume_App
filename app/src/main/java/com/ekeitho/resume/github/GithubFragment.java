@@ -52,6 +52,7 @@ public class GithubFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
+        // these tells the main activity that this is the most recent fragment
         ((Resume)activity).onSectionAttached(2);
         mainActivity = activity;
     }
@@ -110,12 +111,6 @@ public class GithubFragment extends Fragment {
                 new AsyncListViewLoader().execute("https://api.github.com/users/ekeitho/repos?sort=pushed");
             }
         });
-    }
-
-    @Override
-    public void onPause() {
-        Log.v("onPause", "git repo frag onpause");
-        super.onPause();
     }
 
     public class AsyncListViewLoader extends AsyncTask<String, Void, List<Repo>> {
@@ -183,10 +178,8 @@ public class GithubFragment extends Fragment {
 
 
         // self made
-
         private Repo convertContact(JSONObject obj) throws JSONException {
             String name = obj.getString("name");
-
             return new Repo(name);
         }
     }

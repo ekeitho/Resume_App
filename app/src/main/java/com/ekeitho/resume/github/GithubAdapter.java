@@ -1,5 +1,7 @@
 package com.ekeitho.resume.github;
 
+import android.content.Intent;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,11 +23,13 @@ public class GithubAdapter extends RecyclerView.Adapter<GithubAdapter.ViewHolder
         // each data item is just a string in this case
         public View mView;
         public TextView mTextView;
+        public CardView cardView;
 
         public ViewHolder(View v) {
             super(v);
             mView = v;
-            mTextView = (TextView) mView.findViewById(R.id.git_card_text_view);
+            cardView = (CardView) v.findViewById(R.id.git_card_view);
+            mTextView = (TextView) v.findViewById(R.id.git_card_text_view);
         }
     }
 
@@ -38,14 +42,23 @@ public class GithubAdapter extends RecyclerView.Adapter<GithubAdapter.ViewHolder
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.git_cards, parent, false);
         // set the view's size, margins, paddings and layout parameters
+        v.setPadding(10,10,10,10);
 
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(ViewHolder viewHolder, final int i) {
         viewHolder.mTextView.setText(itemList.get(i).getRepoName());
+        viewHolder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+
+                v.getContext().startActivity(intent);
+            }
+        });
     }
 
     @Override
