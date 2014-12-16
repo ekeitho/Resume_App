@@ -96,6 +96,8 @@ public class GithubFragment extends Fragment {
 
 
         if (repoSource.isDatabaseEmpty()) {
+            // rather than grab from network - use a handy sql
+            // for updates to my repo - there is the refresh scroll :)
             list = repoSource.getAllRepos();
         }
         mGithubAdapter = new GithubAdapter(list);
@@ -191,6 +193,7 @@ public class GithubFragment extends Fragment {
             super.onPostExecute(result);
             // notify the adapter on change
             list = result;
+            repoSource.updateAnyChanges(result);
             mGithubAdapter.setItemList(result);
             mGithubAdapter.SetOnItemClickListener(new OnItemClickListener() {
                 @Override

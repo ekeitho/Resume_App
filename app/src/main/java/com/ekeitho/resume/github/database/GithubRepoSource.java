@@ -40,6 +40,8 @@ public class GithubRepoSource {
         return cursor.moveToFirst();
     }
 
+    // return true, if the database needs to be added
+    // return false, if every id is already in the database, so we don't add copies.
     public boolean updateAnyChanges(ArrayList<Repo> repositories) {
 
         for (int i = 0; i < repositories.size(); i++) {
@@ -54,6 +56,7 @@ public class GithubRepoSource {
                 values.put(GithubSQLiteHelper.COLUMN_REPO_NAME, repositories.get(i).getRepoName());
                 values.put(GithubSQLiteHelper.COLUMN_GIT_ID, repositories.get(i).getGitId());
                 database.insert(GithubSQLiteHelper.TABLE_REPOS,null, values);
+                return true;
             }
         }
 
