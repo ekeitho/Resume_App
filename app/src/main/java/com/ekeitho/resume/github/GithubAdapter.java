@@ -3,6 +3,7 @@ package com.ekeitho.resume.github;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,20 +19,36 @@ import java.util.List;
 public class GithubAdapter extends RecyclerView.Adapter<GithubAdapter.ViewHolder> {
 
     private List<Repo> itemList;
+    OnItemClickListener mItemClickListener;
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // each data item is just a string in this case
         public View mView;
         public TextView mTextView;
         public CardView cardView;
 
+
         public ViewHolder(View v) {
             super(v);
             mView = v;
+
             cardView = (CardView) v.findViewById(R.id.git_card_view);
+            cardView.setOnClickListener(this);
             mTextView = (TextView) v.findViewById(R.id.git_card_text_view);
         }
+
+        @Override
+        public void onClick(View v) {
+            if( mItemClickListener!= null) {
+                mItemClickListener.onItemClick(v, getPosition());
+            }
+        }
     }
+
+    public void SetOnItemClickListener(final OnItemClickListener mItemClickListener) {
+        this.mItemClickListener = mItemClickListener;
+    }
+
 
     public GithubAdapter(List<Repo> itemList) {
         this.itemList = itemList;
@@ -45,15 +62,6 @@ public class GithubAdapter extends RecyclerView.Adapter<GithubAdapter.ViewHolder
         v.setPadding(10,10,10,10);
 
         ViewHolder vh = new ViewHolder(v);
-        vh.cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if ( parent.getContext().getResources().getBoolean(R.bool.dual_pane)) {
-
-                }
-            }
-        });
-
         return vh;
     }
 
@@ -70,6 +78,7 @@ public class GithubAdapter extends RecyclerView.Adapter<GithubAdapter.ViewHolder
     public void setItemList(List<Repo> itemList) {
         this.itemList = itemList;
     }
+
 
 }
 

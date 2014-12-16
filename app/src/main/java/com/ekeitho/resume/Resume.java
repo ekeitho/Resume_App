@@ -57,7 +57,7 @@ public class Resume extends ActionBarActivity
         if( position == 1) {
             fragmentManager.beginTransaction()
                     .replace(R.id.container, new GithubFragment())
-                    .commit();
+                    .addToBackStack(null).commit();
         } else {
             fragmentManager.beginTransaction()
                     .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
