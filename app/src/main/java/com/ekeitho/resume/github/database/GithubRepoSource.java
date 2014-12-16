@@ -43,17 +43,18 @@ public class GithubRepoSource {
     public boolean updateAnyChanges(ArrayList<Repo> repositories) {
 
         for (int i = 0; i < repositories.size(); i++) {
+
+            // @Todo : what if user updates and i delete a repository, must implement way to recognize this
             // if the repo git id isn't in the database, then add it
             if(!database.query(GithubSQLiteHelper.TABLE_REPOS, allColumns,
                     GithubSQLiteHelper.COLUMN_GIT_ID + " = " + repositories.get(i).getGitId(), null,
                     null, null, null).moveToFirst()){
+
                 ContentValues values = new ContentValues();
                 values.put(GithubSQLiteHelper.COLUMN_REPO_NAME, repositories.get(i).getRepoName());
                 values.put(GithubSQLiteHelper.COLUMN_GIT_ID, repositories.get(i).getGitId());
                 database.insert(GithubSQLiteHelper.TABLE_REPOS,null, values);
             }
-
-
         }
 
         return false;
