@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,7 +36,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by Keithmaynn on 12/13/14.
@@ -96,41 +94,42 @@ public class GithubFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // first set the adapter as empty
-        if (savedInstanceState != null) {
+
+        if (repoSource.isDatabaseEmpty()) {
+            list = repoSource.getAllRepos();
+        }
+        mGithubAdapter = new GithubAdapter(list);
 
 
-        } else {
-            mGithubAdapter = new GithubAdapter(list);
+        // set the views adapter to our created one
+        // use this setting to improve performance if you know that changes
+        // in content do not change the layout size of the RecyclerView
+        mRecyclerView.setHasFixedSize(true);
 
 
-            // set the views adapter to our created one
-            // use this setting to improve performance if you know that changes
-            // in content do not change the layout size of the RecyclerView
-            mRecyclerView.setHasFixedSize(true);
+        // use a linear layout manager
+        mLayoutManager = new LinearLayoutManager(mainActivity);
+
+        // set recycler views manager and the adapter
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mRecyclerView.setAdapter(mGithubAdapter);
 
 
-            // use a linear layout manager
-            mLayoutManager = new LinearLayoutManager(mainActivity);
+        // the fancy refresh down swipe :)
+        mSwipeRefreshLayout.setColorSchemeColors(Color.parseColor("#4A148C"));
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                new AsyncListViewLoader().execute("https://api.github.com/users/ekeitho/repos?sort=pushed");
 
-            // set recycler views manager and the adapter
-            mRecyclerView.setLayoutManager(mLayoutManager);
-            mRecyclerView.setAdapter(mGithubAdapter);
+            }
+        });
 
-
-            // the fancy refresh down swipe :)
-            mSwipeRefreshLayout.setColorSchemeColors(Color.parseColor("#4A148C"));
-            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-                @Override
-                public void onRefresh() {
-                    new AsyncListViewLoader().execute("https://api.github.com/users/ekeitho/repos?sort=pushed");
-
-                }
-            });
-
-
+        // this should only launch on first use off the app -- or deletion of cache
+        if(!repoSource.isDatabaseEmpty()) {
             new AsyncListViewLoader().execute("https://api.github.com/users/ekeitho/repos?sort=pushed");
         }
+
     }
 
 
@@ -215,13 +214,16 @@ public class GithubFragment extends Fragment {
             mGithubAdapter.notifyDataSetChanged();
             // set the refresh off
             mSwipeRefreshLayout.setRefreshing(false);
+
+
         }
 
 
         // self made
         private Repo convertRepo(JSONObject obj) throws JSONException {
             String name = obj.getString("name");
-            return new Repo(name);
+            long id = obj.getLong("id");
+            return new Repo(id, name);
         }
     }
 }

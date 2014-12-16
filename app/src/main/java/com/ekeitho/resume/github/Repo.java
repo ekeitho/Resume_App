@@ -8,12 +8,19 @@ import android.os.Parcelable;
  */
 public class Repo  {
 
+    private long id;
     private String name;
 
-    public Repo(String name) {
+    public Repo(long id, String name) {
+
+        this.id = id;
         this.name = name;
     }
 
+
+    public long getGitId() {
+        return this.id;
+    }
 
     public void setRepoName(String name) {
         this.name = name;

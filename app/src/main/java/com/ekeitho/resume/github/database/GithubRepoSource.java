@@ -20,6 +20,7 @@ public class GithubRepoSource {
     private SQLiteDatabase database;
     private GithubSQLiteHelper dbHelper;
     private String[] allColumns = {GithubSQLiteHelper.COLUMN_ID,
+            GithubSQLiteHelper.COLUMN_GIT_ID,
             GithubSQLiteHelper.COLUMN_REPO_NAME};
 
     public GithubRepoSource(Context context) {
@@ -34,18 +35,31 @@ public class GithubRepoSource {
         dbHelper.close();
     }
 
-    public boolean hasDatabaseBeenUsed () {
+    public boolean isDatabaseEmpty() {
         Cursor cursor = database.query(GithubSQLiteHelper.TABLE_REPOS, allColumns, null, null, null, null, null);
         return cursor.moveToFirst();
     }
 
-    public void addAllRepositories(ArrayList<Repo> repositories) {
+    public boolean updateAnyChanges(ArrayList<Repo> repositories) {
+
         for (int i = 0; i < repositories.size(); i++) {
-            ContentValues values = new ContentValues();
-            values.put(GithubSQLiteHelper.COLUMN_REPO_NAME, repositories.get(i).getRepoName());
-            database.insert(GithubSQLiteHelper.TABLE_REPOS, null, values);
+            // if the repo git id isn't in the database, then add it
+            if(!database.query(GithubSQLiteHelper.TABLE_REPOS, allColumns,
+                    GithubSQLiteHelper.COLUMN_GIT_ID + " = " + repositories.get(i).getGitId(), null,
+                    null, null, null).moveToFirst()){
+                ContentValues values = new ContentValues();
+                values.put(GithubSQLiteHelper.COLUMN_REPO_NAME, repositories.get(i).getRepoName());
+                values.put(GithubSQLiteHelper.COLUMN_GIT_ID, repositories.get(i).getGitId());
+                database.insert(GithubSQLiteHelper.TABLE_REPOS,null, values);
+            }
+
+
         }
+
+        return false;
     }
+
+
 
     public Repo createRepo(String name) {
         ContentValues values = new ContentValues();
@@ -62,7 +76,7 @@ public class GithubRepoSource {
         return newRepo;
     }
 
-    public ArrayList<Repo> getAllComments() {
+    public ArrayList<Repo> getAllRepos() {
         ArrayList<Repo> repositories = new ArrayList<Repo>();
 
         Cursor cursor = database.query(GithubSQLiteHelper.TABLE_REPOS,
@@ -80,7 +94,7 @@ public class GithubRepoSource {
     }
 
     private Repo cursorToNextRepo(Cursor cursor) {
-        Repo repo = new Repo(cursor.getString(1));
+        Repo repo = new Repo(cursor.getLong(1), cursor.getString(2));
         return repo;
     }
 }

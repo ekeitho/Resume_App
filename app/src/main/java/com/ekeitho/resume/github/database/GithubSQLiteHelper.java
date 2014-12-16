@@ -13,6 +13,7 @@ public class GithubSQLiteHelper extends SQLiteOpenHelper {
 
     public static final String TABLE_REPOS = "repos";
     public static final String COLUMN_ID = "_id";
+    public static final String COLUMN_GIT_ID = "git_id";
     public static final String COLUMN_REPO_NAME = "repo_name";
 
     private static final String DATABASE_NAME = "gitrepo.db";
@@ -22,7 +23,9 @@ public class GithubSQLiteHelper extends SQLiteOpenHelper {
     private static final String DATABASE_CREATE = "create table "
             + TABLE_REPOS + "("
             + COLUMN_ID + " integer primary key autoincrement, "
-            + COLUMN_REPO_NAME + " text not null);";
+            + COLUMN_REPO_NAME + " text not null "
+            + COLUMN_GIT_ID + " integer not null"
+            + ");";
 
     public GithubSQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
