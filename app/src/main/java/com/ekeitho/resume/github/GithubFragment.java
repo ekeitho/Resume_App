@@ -59,13 +59,6 @@ public class GithubFragment extends Fragment {
         mainActivity = activity;
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-
-        super.onSaveInstanceState(outState);
-
-    }
-
     /**
      * This method should only set up and create instances of our views.
      */
@@ -95,7 +88,7 @@ public class GithubFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
 
-        if (repoSource.isDatabaseEmpty()) {
+        if (repoSource.doesDatabaseHaveData()) {
             // rather than grab from network - use a handy sql
             // for updates to my repo - there is the refresh scroll :)
             list = repoSource.getAllRepos();
@@ -128,7 +121,7 @@ public class GithubFragment extends Fragment {
         });
 
         // this should only launch on first use off the app -- or deletion of cache
-        if(!repoSource.isDatabaseEmpty()) {
+        if(!repoSource.doesDatabaseHaveData()) {
             new AsyncListViewLoader().execute("https://api.github.com/users/ekeitho/repos?sort=pushed");
         }
 

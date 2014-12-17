@@ -35,7 +35,7 @@ public class GithubRepoSource {
         dbHelper.close();
     }
 
-    public boolean isDatabaseEmpty() {
+    public boolean doesDatabaseHaveData() {
         Cursor cursor = database.query(GithubSQLiteHelper.TABLE_REPOS, allColumns, null, null, null, null, null);
         return cursor.moveToFirst();
     }
